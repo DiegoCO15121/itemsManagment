@@ -29,7 +29,7 @@ export class UserService {
     const query = this.UserRepository.createQueryBuilder('user');
 
     query
-      .orderBy('id', 'DESC')
+      .orderBy('user.id', 'DESC')
       .skip((page - 1) * limit)
       .take(limit);
 
@@ -54,6 +54,10 @@ export class UserService {
     if (!user) throw new NotFoundException('Usuario no encontrado');
 
     const newUser = await this.UserRepository.save(user);
+
+    return {
+      message: 'Usuario actualizado'
+    }
   }
 
   async remove(id: number) {

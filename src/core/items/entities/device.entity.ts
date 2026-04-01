@@ -13,9 +13,6 @@ export class Device {
   id: number;
 
   @Column()
-  serialNumber: string;
-
-  @Column()
   memory: string;
 
   @Column()

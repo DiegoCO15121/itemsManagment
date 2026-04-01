@@ -8,32 +8,33 @@ export class Assignment {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column({nullable: true})
-  end_data?: Date;
+  @Column({nullable: true, name:'end_date'})
+  endDate?: Date;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  created_at?: Date;
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
+  createdAt?: Date;
 
   @Column({ 
     type: 'timestamp', 
     default: () => 'CURRENT_TIMESTAMP',
-    onUpdate: 'CURRENT_TIMESTAMP'
+    onUpdate: 'CURRENT_TIMESTAMP',
+    name: 'updated_at'
   })
-  updated_at?: Date;
+  updatedAt?: Date;
 
   @Column({
     type: 'enum',
     enum: AssignmentStatus,
     default: AssignmentStatus.ACTIVE,
-  })p
-  status?: AssignmentStatus;
+  })
+  status: AssignmentStatus;
 
 
-  @ManyToOne(() => User, (user) => user.assignment)
+  @ManyToOne(() => User, (user) => user.assignments)
   @JoinColumn({name: 'user_id'})
   user: User
 
-  @ManyToOne(() => Item, (item) => item.assignment)
+  @ManyToOne(() => Item, (item) => item.assignments)
   @JoinColumn({name: 'item_id'})
   item: Item
 }

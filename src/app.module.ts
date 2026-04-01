@@ -4,11 +4,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './core/user/user.module';
 import { ItemsModule } from './core/items/items.module';
 import { AssignmentsModule } from './core/assignments/assignments.module';
+import { SeedModule } from './database/seeds/seed.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
+      
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
@@ -24,6 +26,7 @@ import { AssignmentsModule } from './core/assignments/assignments.module';
     UserModule,
     ItemsModule,
     AssignmentsModule,
+    SeedModule
   ],
 })
 export class AppModule {}

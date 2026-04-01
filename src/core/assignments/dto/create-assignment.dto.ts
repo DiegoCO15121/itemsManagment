@@ -2,9 +2,9 @@ import { IsNumber } from "class-validator";
 
 export class CreateAssignmentDto {
     @IsNumber()
-    user_id: number
+    userId: number
     
     @IsNumber()
-    item_id: number
+    itemId: number
     
 }

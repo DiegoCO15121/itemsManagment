@@ -1,10 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateAssignmentDto } from './dto/create-assignment.dto';
 import { UpdateAssignmentDto } from './dto/update-assignment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Assignment } from './entities/assignment.entity';
 import { Repository } from 'typeorm';
 import { PaginationAssignmentDTO } from './dto/pagination-assignment.dto';
+import { AssignmentStatus } from './enums/assingments.enum';
 
 @Injectable()
 export class AssignmentsService {
@@ -14,9 +19,20 @@ export class AssignmentsService {
   ) {}
 
   async create(createAssignmentDto: CreateAssignmentDto) {
+    const existing = await this.assignmentRepository.findOne({
+      where: {
+        item: { id: createAssignmentDto.itemId },
+        status: AssignmentStatus.ACTIVE,
+      },
+    });
+
+    if (existing) {
+      throw new BadRequestException('El item ya está asignado');
+    }
+
     const assignment = this.assignmentRepository.create({
-      user: { id: createAssignmentDto.user_id },
-      item: { id: createAssignmentDto.item_id },
+      user: { id: createAssignmentDto.userId },
+      item: { id: createAssignmentDto.itemId },
     });
 
     await this.assignmentRepository.save(assignment);
@@ -27,9 +43,9 @@ export class AssignmentsService {
   }
 
   async findAll(paginationAssignmentDTO: PaginationAssignmentDTO) {
-    const { limit = 10, page = 10 } = paginationAssignmentDTO;
+    const { limit = 10, page = 1 } = paginationAssignmentDTO;
 
-    const query = this.assignmentRepository.createQueryBuilder('assingment');
+    const query = this.assignmentRepository.createQueryBuilder('assignment');
 
     query
       .orderBy('id', 'DESC')
@@ -44,7 +60,7 @@ export class AssignmentsService {
   async findOne(id: number) {
     const assignment = await this.assignmentRepository.findOne({
       where: { id },
-      relations: ['items', 'users'],
+      relations: ['item', 'user'],
     });
 
     if (!assignment) throw new NotFoundException('Asignacion no encontrada');
@@ -53,14 +69,15 @@ export class AssignmentsService {
   }
 
   async update(id: number, updateAssignmentDto: UpdateAssignmentDto) {
-    const assigment = await this.assignmentRepository.preload({
-      id,
-      ...updateAssignmentDto,
-    });
+    const assignment = await this.findOne(id);
 
-    if (!assigment) throw new NotFoundException('Asignacion no encontrada');
+    assignment.status = updateAssignmentDto.status;
 
-    await this.assignmentRepository.save(assigment);
+    if (updateAssignmentDto.status === AssignmentStatus.INACTIVE) {
+      assignment.endDate = new Date();
+    }
+
+    await this.assignmentRepository.save(assignment);
 
     return {
       message: 'Asignaacion actualizada correctamente',
@@ -68,8 +85,8 @@ export class AssignmentsService {
   }
 
   async remove(id: number) {
-    const assignment = await this.findOne(id);
+    await this.findOne(id);
 
-    await this.assignmentRepository.delete(assignment);
+    await this.assignmentRepository.delete(id);
   }
 }

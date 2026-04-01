@@ -18,5 +18,5 @@ export class User {
     role: UserRole
 
     @OneToMany(() => Assignment, (assigment) => assigment.user)
-    assignment: Assignment
+    assignments: Assignment[]
 }

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -6,6 +6,7 @@ import { Item } from './entities/item.entity';
 import { DataSource, Repository } from 'typeorm';
 import { Device } from './entities/device.entity';
 import { PaginationItemDTO } from './dto/pagination-item.dto';
+import { ItemType } from './enums/item.enum';
 
 @Injectable()
 export class ItemsService {
@@ -22,14 +23,20 @@ export class ItemsService {
         description: createItemDto.description,
         type: createItemDto.type,
         status: createItemDto.status,
+        serialNumber: createItemDto.serialNumber
       });
 
       const savedItem = await manager.save(item);
 
-      if (createItemDto.type === 'device') {
+      if (createItemDto.type === ItemType.DEVICE) {
+        if (
+          !createItemDto.memory ||
+          !createItemDto.cpu
+        ) {
+          throw new BadRequestException('Faltan datos del device');
+        }
         const device = manager.create(Device, {
           item: savedItem,
-          serial_number: createItemDto.serialNumber,
           memory: createItemDto.memory,
           cpu: createItemDto.cpu,
         });
@@ -44,10 +51,10 @@ export class ItemsService {
   async findAll(paginationItemDto: PaginationItemDTO) {
     const { page = 1, limit = 10 } = paginationItemDto;
 
-    const query = this.ItemRespository.createQueryBuilder('user');
+    const query = this.ItemRespository.createQueryBuilder('item');
 
     query
-      .orderBy('id', 'DESC')
+      .orderBy('item.id', 'DESC')
       .skip((page - 1) * limit)
       .take(limit);
 
@@ -58,13 +65,20 @@ export class ItemsService {
   async findOne(id: number) {
     const item = await this.ItemRespository.findOneBy({ id });
 
-    if (!item) throw new NotFoundException('Usuario no encontrado');
+    if (!item) throw new NotFoundException('Item no encontrado');
 
     return item;
   }
 
-  update(id: number, updateItemDto: UpdateItemDto) {
-    return `This action updates a #${id} item`;
+  async update(id: number, updateItemDto: UpdateItemDto) {
+    const item = await this.ItemRespository.preload({
+      id,
+      ...updateItemDto,
+    });
+
+    if (!item) throw new NotFoundException('Item no encontrado');
+
+    return await this.ItemRespository.save(item);
   }
 
   async remove(id: number) {
