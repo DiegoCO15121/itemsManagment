@@ -1,30 +1,39 @@
-import { IsEnum, IsOptional, IsString } from "class-validator";
-import { ItemStatus, ItemType } from "../enums/item.enum";
+import {
+  IsEnum,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+  ValidateIf,
+  ValidateNested,
+} from 'class-validator';
+import { ItemSpecificType, ItemStatus, ItemType } from '../enums/item.enum';
+import { CreateComputerDto } from './computer.dto';
 
 export class CreateItemDto {
-    
-    @IsString()
-    name: string
+  @IsString()
+  name: string;
 
-    @IsString()
-    description: string
+  @IsString()
+  description: string;
 
-    @IsEnum(ItemType)
-    type: ItemType
+  @IsEnum(ItemType)
+  type: ItemType;
 
-    @IsEnum(ItemStatus)
-    status: ItemStatus
+  @IsEnum(ItemStatus)
+  status: ItemStatus;
 
-    @IsOptional()
-    @IsString()
-    serialNumber: string
+  @IsString()
+  serialNumber: string;
 
-    @IsOptional()
-    @IsString()
-    memory: string
+  @IsNumber()
+  areaId: number;
 
-    @IsOptional()
-    @IsString()
-    cpu: string
+  @IsEnum(ItemSpecificType)
+  specifyTypeItem: ItemSpecificType;
 
+  @IsObject()
+  @ValidateNested()
+  @ValidateIf((o: CreateItemDto) => o.specifyTypeItem === ItemSpecificType.COMPUTER)
+  computer?: CreateComputerDto;
 }

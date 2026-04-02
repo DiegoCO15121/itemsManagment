@@ -1,5 +1,5 @@
 import {
-    IsEnum, IsString
+    IsEnum, IsNumber, IsString
 } from 'class-validator';
 import { UserRole } from '../enum/user.enum';
 
@@ -12,4 +12,7 @@ export class CreateUserDto {
 
     @IsEnum(UserRole)
     role: UserRole
+
+    @IsNumber()
+    areaId: number
 }

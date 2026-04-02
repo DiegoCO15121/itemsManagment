@@ -1,6 +1,6 @@
 export enum UserRole {
-  JEFE_PROYECTOS = 'jefe_proyectos',
-  DESARROLLADOR_FULLSTACK = 'desarrollador_fullstack',
-  DESARROLLADOR_SALESFORCE = 'desarrollador_salesforce',
-  JEFE_DEPARTAMENTO_IA = 'jefe_departamento_ia',
+  FULLSTACK_DEVELOPER = 'fullstack_developer',
+  SALESFORCE_DEVELOPER = 'salesforce_developer',
+  PROJECT_MANAGER = 'project_manager',
+  IA_MANAGER = 'ia_manager',
 }

@@ -3,13 +3,18 @@ import { SeedModule } from './seed.module';
 import { UserSeeder } from './users/user.seeder';
 import { ItemSeeder } from './items/item.seeder';
 import { AssignmentSeeder } from './assignments/assignments.seeder';
+import { AreaSeeder } from './areas/areas.seeder';
 
 async function bootstrap() {
   const app = await NestFactory.createApplicationContext(SeedModule);
 
+  const areaSeeder = app.get(AreaSeeder)
   const userSeeder = app.get(UserSeeder);
   const itemSeeder = app.get(ItemSeeder);
   const assignmentSeeder = app.get(AssignmentSeeder);
+
+  await areaSeeder.run();
+  console.log('Areas')
 
   await userSeeder.run();
   console.log('Users');

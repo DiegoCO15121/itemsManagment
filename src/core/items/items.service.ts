@@ -1,23 +1,30 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Item } from './entities/item.entity';
 import { DataSource, Repository } from 'typeorm';
-import { Device } from './entities/device.entity';
 import { PaginationItemDTO } from './dto/pagination-item.dto';
-import { ItemType } from './enums/item.enum';
 
 @Injectable()
 export class ItemsService {
   constructor(
     @InjectRepository(Item) private ItemRespository: Repository<Item>,
-    @InjectRepository(Device) private DeviceRepository: Repository<Device>,
-    private dataSource: DataSource,
+   // private dataSource: DataSource,
   ) {}
 
   async create(createItemDto: CreateItemDto) {
-    return await this.dataSource.transaction(async (manager) => {
+    const { computer, ...itemDto } = createItemDto;
+
+    const item = this.ItemRespository.create(itemDto);
+
+    await this.ItemRespository.save(item);
+
+    return {
+      message: 'Item creado correctamente',
+    };
+
+    /* return await this.dataSource.transaction(async (manager) => {
       const item = manager.create(Item, {
         name: createItemDto.name,
         description: createItemDto.description,
@@ -45,7 +52,7 @@ export class ItemsService {
       }
 
       return savedItem;
-    });
+    }); */
   }
 
   async findAll(paginationItemDto: PaginationItemDTO) {

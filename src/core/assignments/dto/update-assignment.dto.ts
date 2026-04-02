@@ -1,9 +1,11 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateAssignmentDto } from './create-assignment.dto';
-import { IsEnum } from 'class-validator';
-import { AssignmentStatus } from '../enums/assingments.enum';
+import { IsDate, IsOptional } from 'class-validator';
 
 export class UpdateAssignmentDto {
-  @IsEnum(AssignmentStatus)
-  status: AssignmentStatus;
+  @IsOptional()
+  @IsDate()
+  assignmentDate: Date;
+
+  @IsOptional()
+  @IsDate()
+  returnedDate: Date;
 }

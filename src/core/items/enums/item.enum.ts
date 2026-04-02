@@ -1,10 +1,17 @@
 export enum ItemStatus {
-  AVAILABLE = 'available',
-  ASSIGNED = 'assigned',
-  MAINTENANCE = 'maintenance',
+  AVAILABLE = 'disponible',
+  RETIRED = 'retirado',
+  MAINTENANCE = 'mantenimiento',
 }
 
 export enum ItemType {
-  DEVICE = 'device',
-  FURNITURE = 'furniture',
+  DEVICE = 'dispositivo',
+  FURNITURE = 'mueble',
+}
+
+export enum ItemSpecificType {
+  COMPUTER = 'computadora',
+  PRINT = 'impresora', 
+  DESKTOP  = 'escritorio',
+  MONITOR = 'monitor'
 }

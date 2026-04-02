@@ -1,5 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { AssignmentStatus } from '../enums/assingments.enum';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from 'src/core/user/entities/user.entity';
 import { Item } from 'src/core/items/entities/item.entity';
 
@@ -8,11 +7,19 @@ export class Assignment {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column({nullable: true, name:'end_date'})
-  endDate?: Date;
+  @ManyToOne(() => User, (user) => user.assignments)
+  @JoinColumn({name: 'user_id'})
+  user: User
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
-  createdAt?: Date;
+  @ManyToOne(() => Item, (item) => item.assignments)
+  @JoinColumn({name: 'item_id'})
+  item: Item
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', name: 'assignment_at' })
+  assignmentDate?: Date;
+
+  @Column({nullable: true, name:'returned_date'})
+  returnedDate?: Date;
 
   @Column({ 
     type: 'timestamp', 
@@ -22,19 +29,6 @@ export class Assignment {
   })
   updatedAt?: Date;
 
-  @Column({
-    type: 'enum',
-    enum: AssignmentStatus,
-    default: AssignmentStatus.ACTIVE,
-  })
-  status: AssignmentStatus;
-
-
-  @ManyToOne(() => User, (user) => user.assignments)
-  @JoinColumn({name: 'user_id'})
-  user: User
-
-  @ManyToOne(() => Item, (item) => item.assignments)
-  @JoinColumn({name: 'item_id'})
-  item: Item
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', name: 'created_at' })
+  createdAt?: Date;  
 }

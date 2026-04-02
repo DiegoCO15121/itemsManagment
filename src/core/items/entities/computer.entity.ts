@@ -8,7 +8,7 @@ import {
 import { Item } from './item.entity';
 
 @Entity()
-export class Device {
+export class Computer {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
@@ -18,7 +18,7 @@ export class Device {
   @Column()
   cpu: string;
 
-  @OneToOne(() => Item, (item) => item.device)
+  @OneToOne(() => Item, (item) => item.computer)
   @JoinColumn({ name: 'item_id' })
   item: Item;
 }

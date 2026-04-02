@@ -7,7 +7,7 @@ import { CreateAssignmentDto } from './dto/create-assignment.dto';
 import { UpdateAssignmentDto } from './dto/update-assignment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Assignment } from './entities/assignment.entity';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { PaginationAssignmentDTO } from './dto/pagination-assignment.dto';
 import { AssignmentStatus } from './enums/assingments.enum';
 
@@ -22,7 +22,7 @@ export class AssignmentsService {
     const existing = await this.assignmentRepository.findOne({
       where: {
         item: { id: createAssignmentDto.itemId },
-        status: AssignmentStatus.ACTIVE,
+        returnedDate: IsNull(),
       },
     });
 
@@ -33,6 +33,7 @@ export class AssignmentsService {
     const assignment = this.assignmentRepository.create({
       user: { id: createAssignmentDto.userId },
       item: { id: createAssignmentDto.itemId },
+      assignmentDate: createAssignmentDto.assigmentDate,
     });
 
     await this.assignmentRepository.save(assignment);
@@ -69,18 +70,17 @@ export class AssignmentsService {
   }
 
   async update(id: number, updateAssignmentDto: UpdateAssignmentDto) {
-    const assignment = await this.findOne(id);
+    const assignment = await this.assignmentRepository.preload({
+      id,
+      ...updateAssignmentDto,
+    });
 
-    assignment.status = updateAssignmentDto.status;
-
-    if (updateAssignmentDto.status === AssignmentStatus.INACTIVE) {
-      assignment.endDate = new Date();
-    }
+    if (!assignment) throw new NotFoundException('Asinación no encontrada');
 
     await this.assignmentRepository.save(assignment);
 
     return {
-      message: 'Asignaacion actualizada correctamente',
+      message: 'Asignacion actualizada correctamente',
     };
   }
 

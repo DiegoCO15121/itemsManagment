@@ -4,108 +4,132 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Seeder } from 'typeorm-extension';
 import { User } from 'src/core/user/entities/user.entity';
 import { UserRole } from 'src/core/user/enum/user.enum';
+import { Area } from 'src/core/areas/entities/area.entity';
 
 @Injectable()
 export class UserSeeder implements Seeder {
   constructor(
     @InjectRepository(User)
     private readonly repo: Repository<User>,
+
+    @InjectRepository(Area)
+    private readonly AreaRepository: Repository<Area>
   ) {}
   public async run(): Promise<any> {
+    const areas = await this.AreaRepository.find()
+
     const users: Partial<User>[] = [
       {
         firstName: 'Jairo',
         lastName: 'Martinez',
-        role: UserRole.JEFE_DEPARTAMENTO_IA,
+        role: UserRole.IA_MANAGER,
+        area: areas[0]
       },
       {
         firstName: 'Pavel',
         lastName: 'Sumano',
-        role: UserRole.JEFE_PROYECTOS,
+        role: UserRole.PROJECT_MANAGER,
+        area: areas[0]
       },
 
       {
         firstName: 'Horacio',
         lastName: 'Arniel',
-        role: UserRole.DESARROLLADOR_SALESFORCE,
+        role: UserRole.SALESFORCE_DEVELOPER,
+        area: areas[1]
       },
       {
         firstName: 'Daniel',
         lastName: 'Valdez',
-        role: UserRole.DESARROLLADOR_SALESFORCE,
+        role: UserRole.SALESFORCE_DEVELOPER,
+        area: areas[1]
       },
       {
         firstName: 'Javier',
         lastName: 'Avendaño',
-        role: UserRole.DESARROLLADOR_SALESFORCE,
+        role: UserRole.SALESFORCE_DEVELOPER,
+        area: areas[1]
       },
       {
         firstName: 'Yu Ban',
         lastName: 'Mena Zabala',
-        role: UserRole.DESARROLLADOR_SALESFORCE,
+        role: UserRole.SALESFORCE_DEVELOPER,
+        area: areas[1]
       },
       {
         firstName: 'Rolando',
         lastName: 'Tomás',
-        role: UserRole.DESARROLLADOR_SALESFORCE,
+        role: UserRole.SALESFORCE_DEVELOPER,
+        area: areas[1]
       },
       {
         firstName: 'Angel',
         lastName: 'Rosario',
-        role: UserRole.DESARROLLADOR_SALESFORCE,
+        role: UserRole.SALESFORCE_DEVELOPER,
+        area: areas[1]
       },
 
       {
         firstName: 'Mary',
         lastName: 'The Revilla',
-        role: UserRole.DESARROLLADOR_FULLSTACK,
+        role: UserRole.FULLSTACK_DEVELOPER,
+        area: areas[0]
       },
       {
         firstName: 'Jazziel',
         lastName: 'Pérez',
-        role: UserRole.DESARROLLADOR_FULLSTACK,
+        role: UserRole.FULLSTACK_DEVELOPER,
+        area: areas[0]
       },
       {
         firstName: 'Adrian',
         lastName: 'Martínez',
-        role: UserRole.DESARROLLADOR_FULLSTACK,
+        role: UserRole.FULLSTACK_DEVELOPER,
+        area: areas[0]
       },
       {
         firstName: 'Heriberto',
         lastName: 'Gijon',
-        role: UserRole.DESARROLLADOR_FULLSTACK,
+        role: UserRole.FULLSTACK_DEVELOPER,
+        area: areas[0]
       },
       {
         firstName: 'Josias',
         lastName: 'Dominguez',
-        role: UserRole.DESARROLLADOR_FULLSTACK,
+        role: UserRole.FULLSTACK_DEVELOPER,
+        area: areas[0]
       },
 
       {
         firstName: 'Hector',
         lastName: 'Paulo',
-        role: UserRole.DESARROLLADOR_SALESFORCE,
+        role: UserRole.SALESFORCE_DEVELOPER,
+        area: areas[1]
       },
       {
         firstName: 'Daniel',
         lastName: 'Santiago',
-        role: UserRole.DESARROLLADOR_SALESFORCE,
+        role: UserRole.SALESFORCE_DEVELOPER,
+        area: areas[1]
       },
       {
         firstName: 'Fernado',
         lastName: 'Ramirez',
-        role: UserRole.DESARROLLADOR_SALESFORCE,
+        role: UserRole.SALESFORCE_DEVELOPER,
+        area: areas[1]
       },
 
       {
         firstName: 'Diego',
         lastName: 'Crisanto',
-        role: UserRole.DESARROLLADOR_FULLSTACK,
+        role: UserRole.FULLSTACK_DEVELOPER,
+        area: areas[0]
       },
       {
         firstName: 'Eduardo',
         lastName: 'Enriquez',
-        role: UserRole.DESARROLLADOR_FULLSTACK,
+        role: UserRole.FULLSTACK_DEVELOPER,
+        area: areas[0]
       },
     ];
 

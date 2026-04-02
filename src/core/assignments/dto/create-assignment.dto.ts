@@ -1,4 +1,4 @@
-import { IsNumber } from "class-validator";
+import { IsDate, IsNumber } from "class-validator";
 
 export class CreateAssignmentDto {
     @IsNumber()
@@ -6,5 +6,7 @@ export class CreateAssignmentDto {
     
     @IsNumber()
     itemId: number
-    
+
+    @IsDate()
+    assigmentDate: Date
 }

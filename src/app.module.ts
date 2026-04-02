@@ -5,6 +5,7 @@ import { UserModule } from './core/user/user.module';
 import { ItemsModule } from './core/items/items.module';
 import { AssignmentsModule } from './core/assignments/assignments.module';
 import { SeedModule } from './database/seeds/seed.module';
+import { AreasModule } from './core/areas/areas.module';
 
 @Module({
   imports: [
@@ -26,7 +27,8 @@ import { SeedModule } from './database/seeds/seed.module';
     UserModule,
     ItemsModule,
     AssignmentsModule,
-    SeedModule
+    SeedModule,
+    AreasModule
   ],
 })
 export class AppModule {}

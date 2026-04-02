@@ -10,6 +10,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Assignment } from 'src/core/assignments/entities/assignment.entity';
 import { Item } from 'src/core/items/entities/item.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AreasModule } from 'src/core/areas/areas.module';
+import { Area } from 'src/core/areas/entities/area.entity';
+import { AreaSeeder } from './areas/areas.seeder';
 
 @Module({
   imports: [
@@ -31,8 +34,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     UserModule,
     AssignmentsModule,
     ItemsModule,
-    TypeOrmModule.forFeature([User, Assignment, Item]),
+    AreasModule,
+    TypeOrmModule.forFeature([User, Assignment, Item, Area]),
   ],
-  providers: [UserSeeder, AssignmentSeeder, ItemSeeder],
+  providers: [UserSeeder, AssignmentSeeder, ItemSeeder, AreaSeeder],
 })
 export class SeedModule {}
